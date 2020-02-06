@@ -1,0 +1,20 @@
+Cluster vs Non-Cluster
+#Clustered
+-clustered works directly on table data, while the non-clustered works on a copy of such data.
+-2 different storage models - row-storage and column-store.
+-Total 4 combination
+	-Clustered Row-Store Index
+		-Create clustered index IXC on dbo.Users(Surname,Name)
+		-This will stored all other rows as well because clustered index works directly on table.
+		
+	-Non-Cluster Row-Store Index
+	-Cluster Column Store Index
+-There can be only one clustered index per table.
+
+-Covering Index - An index that contains all required information to resolve the query is known as a “Covering Index” – it completely covers the query.
+-To get statical Information
+SET STATISTICS IO ON
+SET STATISTICS TIME ON
+
+-Syntax 
+	

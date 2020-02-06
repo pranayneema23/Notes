@@ -1,0 +1,40 @@
+REST - Representational State Transfer
+	--It means when a RESTful API is called, the server will transfer to the
+		client a representation of the state of the requested resource.
+	--Create application and services
+	--Used by client who understand HTTP
+	--Better then SOAP and XML-RPC
+	--Architectural style, or design pattern, for APIs.
+
+What the server does depends on 2 things
+	--Endpoint (URL/URI)
+	--HTTP Method/Verb
+
+6 Constraints
+	--Uniform Interface
+	--Client-Server Separation
+		--communication only by request/response
+	--Stateless - never save state on the server
+	--Layered System
+		--Layer in between client server should not affect request/response	
+	--Cacheable
+	--Code-on-demand
+
+Three levels of quality
+	--1.Correct use of URIs
+	--2.The correct use of HTTP
+		--Methods
+		--Status Code
+	--3.Implement Hypermedia
+
+HTTP Methods
+	--GET: To consult and read resources.
+	--POST: To create resources.
+	--PUT: To edit resources.
+	--DELETE: To eliminate resources.
+	--PATCH: To edit specific parts of a resource.
+	
+HTTP Status Code
+	--200 : OK/Successful
+	--406 : If requested content not found
+	--

@@ -1,0 +1,13 @@
+Step 0: Install git and create a GitHub account 
+Step 1: Create a local git repository 
+ git init //Initialize a git repository in the root of the folder, run the git init command:  
+ 
+ touch FileName
+ git add <filename> 
+ git status //To see which files git knows exist.
+ git commit
+ git commit -m "Your message about the commit"
+ git checkout -b <my branch name> //To create branch
+ git branch //To confirm that your branch was created:
+ git status //To see which files git knows exist.
+  

@@ -1,0 +1,371 @@
+***************************Getting Started***************************
+#Introduction
+-Create an app called videly
+-Different user role like admin, guest, user etc.
+-Facebook login 
+-Some business rules
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#MVC Architectural Pattern
+M - Model
+V - View
+C - Controller
+--------------------------------------
+-Use to implement user interfaces
+-Initially designed for desktop application back in 1970's
+-Widely adopted in web development
+-Asp.Net MVC, ROR, Express
+--------------------------------------
+-Model = Application data and behaviour in terms of its problem domain and independent of the UI.
+	Ex - Class like Movie, Rental, Customer, Transation (Plane Old CLR Object(POCO's)).This clearly state application
+	state and rules.Not tight to any UI.Can use with desktop, mobile or web application.
+--------------------------------------
+-View = The HTML markup that we display to the user.
+--------------------------------------
+-Controller = Responsible for handling as HTTP Request.
+EX- application hosted at vidly.com
+	When request sent to vidly.com/movies a controller will be selected to handle this request.
+	Controller get data from database(Model) put them in a View and return a view to browser or client.
+-Each component has distinct responsibility and this result in better sepration of concerns.
+-http://xyz.com/movies - the controller will be selected to handel this request.
+	This controller get movie from DB and display using View.
+-MVC is more sepration of concern.
+--------------------------------------
+-One more piece to this architecture not mention in MVC.
+-Router = Seleting the right controller to handel the request is responsibility of router.
+	-Now router select the desirable controller class based on some rule.
+	-more accurately handel by one of the method of the class.
+-In Asp.Net MVC the method of controller are called ACTION Method.	
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Setting up the development environment
+-Install Plugins
+Tools-> Extensions and Updates ->  Online(left side) -> Select Visual Studio Productivity power tools and Web Essentials
+-Resharper is paid VS Extension 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Your first Asp.Net MVC App
+-To create new application  
+-IN VS go to file menu -> New -> Project ->(Left side) Templet -> C# -> Web -> Asp.Net web application
+-In list of templet select MVC.
+-App_Data -> Database file will be stored
+-App_started -> Contain few classes which are called when application started.
+	-RouteConfig - configuration for routing rules.	
+		If request came for movies/popular
+		movies -> MoviesController
+		popular -> Popular() //Action Method Popular()in MoviesController 
+		If request came for movies/edits/1
+		edits/1 -> Edit(int id)
+		If request came for movies only and URL doesn't contain any other parameter then default value mention in router
+		will be called.
+		/movies -> MoviesController.Index();
+-Content -> client side assets
+-Controller (Default we have 3 controller)
+	AccountController -> Action for signup, login, logout
+	HomeController -> represent the home page
+	ManageController ->  action to handel request around user profile like change pwd, enable two factor aurthentacion,
+					Social login etc.
+-Fonts -> we consider it as a part of Content folder.
+-Models	 -> all domain classes will be here.
+-Scripts -> where we have our JS files.
+-View -> V in MVC
+	-Here we have folder after controller in our application.
+	-By convention when we use a view in our controller Asp.Net will look for that view in a folder with same name as controller.
+	-Shared = Includes view which are used across different controlers.
+-favicon.ico is the icon of a application displayed in a browser.
+-Global.asax -> provide hooks for various event and application lifecycle.Register Routes and other things.
+				Whene application started it tell the runtime this are the routes.
+-Package.config -> manage by newget package manager.Similler to NPM.
+	-We use package to manage the dependeny of our application.
+	-Ex- Our application has dependency to 5 external libraries insted of going to 5 different websites for downloading this libraries.We use a package manager and this package manager will download these dependencies from its central repository.Also if in future one of these libraries has a newer version again we use our package manager to upgread one or more of the existing packages.
+Startup.cs -> new approach Microsoft is taking for starting an application.(Next version of ASP.net i.e ASP.net Core 1.0 drop Global.aspx and include startup logic in Startup.cs)
+Web.config -> xml inclued configuration for application.You need to work with only Connection String and app setting section.
+bundlesConfig.cs -> use to bundle the script file to reduce http request.
+	-Define bundels of client side assets,combined and compress multiple JS and CSS file into a bundel and reduce the http request and result faster page load.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#MVC in Action
+-Classes in model are POCO which represents the state and behaviour of our application in terms of problem domain.
+-While creating an view you have a option for partial view.
+	-Partial view is not an complete page it's  like wigite that we can use reuse on different views.
+-layout is like templete or a master page.It's in View/Shared/
+-View fie is a mixture of c# and html code C# code is in @{} box.
+-Every view has this property which gives us access to the model we passed to it and the controller.Type of this property is dynamic.
+-To get propertys of model we need to use a directive to specify the type of the model for this view.
+@model fully qualified name of our model class.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Adding a theme
+-Asp.Net MVC app use bootsstraps as a front end css framework.
+-Use bootswatch.com for different design.
+-Add your custom css under content folder.
+-Add/change refrence for newly added content in bundlesConfig.cs 
+-In bundlesConfig we define various bundles of client side assets.We can combined and compress multiple JS or CSS file into a bundle.And in this way we can reduce the http request for to get this assets whene a page is loded result in faster page load.
+
+***************************ASP.NET MCV Fundamentals*************************** 
+#Action Results
+-output of action
+-ActionResult is base class for all action result in Asp.net MVC.
+-Depend on what an action does it return one of the instance of classes which is derived from ActionResult
+-View is helper method inherited from the base Controller class.This method allow us to quickly create a view result. Alternatively we can return a view result like "return new ViewResult()"
+-If you have different execution path then you use ActionResult as return type.
+-ViewResult - View()
+-PartialViewResult - PartialView()
+-ContentResult - Content() to return simple text
+-RedirectResult - Redirect() to redirect to URL
+-RedirectToRouteResult - RedirectToAction() to redirect to an action insted of an url
+	-RedirectToAction("ActionName","ControllerName",anonymous object to pass parameter to actionmethod)
+-JsonResult - Json() - to return serialized json object
+-FileResult - File() - to return  a file
+-HttpNotFoundResult - HttpNotFound() -to return 404 error
+EmptyResult - when action dosent want to return any values (like void)
+-All helper method present in base controller class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Action Parameters 
+-input to our action
+	-When request comes in the  application MVC framework automatically maps request data to parameter value for action method. 
+	Parameter Binding => Request -> MVC Framwork -> Action
+	Parameter sources => URL,Query String,form data
+-We can also use optional parameter in our Actions.
+	-Ex Index(int? pageIndex, string sortBy)
+	-For string it is refrence type in C# and default nullable.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Convention-based Routes
+- define route for multiple parameter
+-To create custome route go to RouteConfig.cs 
+-ORDER of route matter from most specific to most generic.	So default should be at last otherwise most generic route is applicable to your route.
+-routes.MapRoute(name : "ActionName",url : "",default : "");
+-To specify the default values use anonymous object as 3rd parameter.
+-We can add constrain to our route for parameter.Pass anonymous object as 4th argument and define regular expression.
+-routes.MapRoute(name : "ActionName",url : "",default : "",constrain : {year = @"\d{4}", months = @"\d{2}"});
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Attributte Routing
+-Cleaner way to create custome route.
+-Creating route in routeconfig will become mess when we	have lots of Action method.
+-to reduce complexity to maintain route.
+-Insted of using route you can apply attribute to the corresponding action.
+-To use attribute routing you have to enable it.
+-routes.MapMvcAttributeRoutes();
+-[Route("movies/released/{year}/{month:regex(\\d{2}):range(1,12)}")]
+-Attribute route are more powerfull
+-you can add any no of constrain in attribute routing min, max, regex, int, float, guid, minlength, maxlength
+	-Google - > ASP.Net MVC Attributr Route Constraints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Passing data to a View
+-One way to pass model(data) to view is view data dictionary.
+	-Every controller have property called viewdata of type view data dictionary.
+	-In view use ViewData["value"] insted of @Model
+	-Each item in dictionary is of type object.
+	-We need to expectly cast it to required type.
+	-Also magic string create problem and also code looks ugly.
+-An poor :) improvement of viewdata is viewbag which is of type dynamic.
+	-Use magic property with viewbag to pass data.
+	-ViewBag.Property and now this added property at runtime.
+-Where does the movie object go in the view result?
+	- var viewResult = new ViewResult();
+	- viewResult.ViewData.Model - th object we pass in view() is assigned to this Model and all this is take care by View().
+	-ViewData is not a regular dictionary it is ViewDataDictionary
+	-View Data Dictionary -having problem in maintainability.(magicString)
+	-View Bag - Dynamic type (have magic property which added to ViewBag at compile time) We dont get compile time safty.
+	-(View Bag is improvemrnt over view data as per microsoft)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#View Models
+-Ex - In our view we only display movie. But what if we want to show customer who rented movie. 
+		-But there may not be a relationship b/w movie and customer so we need to pass 2 different model to this view
+-In domain Model we may not have relation between Movie and the customer classes so we need to pass two different model to this view(Movie and customer).
+-Model is purely for domain classes.
+-View model is used when we need model specifically build for a View.Include data and rules to its specific view.
+-Model Folder purely for our domain classes like customer, movie and so on.
+-ViewModel is in seprate model
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Razor Syntax
+-View Engine in MVC called razor view engine knows how to parse the syntax.(i.e. the C# code with html and vice-versa)
+	-curly brackat are compulsary even if you have only single line.
+-<text></text> this is something the razor view can understand.
+-You can also render class dynamically.
+-@**@ comment in razor view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Partial View
+-@RenderBody() - whatever we put in our view is rendered here.
+-Partial view is like small view that we can reuse on different views.
+-Partial view not neccssaraly reusing markup.Sometime use to break down the large view to smaller more maintainable partial view.
+-@Html is property of our view which is of type HTML helper. 
+-To improve the maintainability of html we break code into partial view.
+	User Html (property of HTMLHelper) Html.Partial method to render partial view. We can also pass model to partial view.If we not give any model then, model which is passed to layout view is passed to the partial view 
+
+***************************Working with data***************************
+#Entity Framwork 
+	-Tool to access a DB.
+	-Classified as an Object relational mapper(ORM) -> Relates data in relational DB into object of our application.(Maps data in a relational database)
+	-Previously we have to do this manually, which involve opening a connection, executing a command, reading the data and then close the connection.Now Object/ relational mapper make it easy.
+	-We work at higher level of abstraction.
+	-DbContext -> gatway to database(DB) ---1...*--> Dbset(represent table n our database)
+	-We use LINQ to query DBSet and EF translet linq query into SQL at runtime.Its open connection to database, read the data, maps to object and add them to DB set in our DBContext.
+	-When we add/modify/delete EF keep track of these changes.When we presist the changes it will automatically create sql statement and execute them on our database.
+	-Two WorkFlows
+		-Database First
+		-Code First
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#DbFirst vs CodeFirst
+-Traditional way is to design database table first and then have EF generate the corresponding domain classes, this is called Db First.
+	Database -> EF -> Domain classes
+-Another way is just opposite first we create domain classes and then have EF to generate db table for us.
+	-Increase productivity
+	-You have to create change script manually while working with DbFirst
+	-Full versioning of database. Can move any time to any version.(To any state)
+	-Much easier to build an integration test db.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Code First Migration
+	-Here we start with a code, when we change anything in our domain model we create migration and then run it on the database.
+	-First we need to enable migration by "enable-migration"
+	-Go to Package Manager Console and type command "enable-migration"
+	-Now to add migration type command "add-migration MigrationName"
+	-To update DB type command "Update-DataBase"
+	-Identity model is default creation of Asp.net MVC application.
+	-Some default code is form ASP.net identity to control authentication and authorization.
+	-IdentityDbContext -> it is a part of Identity Framwork
+	-DbContext is gatway to our database.
+	-IdentityDbContext is part of Asp.Net identity framework.
+	-When we add migration, the EF looks at our DB context and it discover db set in identityDbContext which reference classes like user role and so on.
+	-Dbset represent table of corresponding class in database.
+	-In migration created class we can't see any reference to our domain classes because they are not referenced by our dbcontext. So we need to add Dbset in IdentityModels.
+	-To force migration with same name use -force
+	-Aim for small migration
+	-To override existing migration use "-force"
+	-To run migration "update-database"
+	-We also have table for migration history we had run in our code so far.	
+	-Navigation Property - It allow us to navigate from one type to another.Ex- Customer to its membership type.
+		It is usefull when you want to load an objects and its ralated object together from a DB.
+	-If you are using codefirst then do all the changes only by migration.
+	-So for MembershipType we need consistency b/w different environment to do this we create empty migration and then insert the record statement.
+	-You can use the  migration file to deploy the project
+	-With Code-First approach we have full version control on our application across all environment.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Changing the Model
+-Aim for small migration.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Overriding Conventions
+	-There are few conventions built into EF which are used to determine the schema of the DB.
+		Ex- Customer Name is string which is of any length so DB equivalent to Nvarchar of MAX
+	-Use data annotation or an attribute called required.
+	-Approach of overriding default conventions is called data annotations.
+	-Data annotation have some limitation so we have FLUENCE API
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Querying Objects
+	-deferred execution (EF not going to query the DB) 
+	-Query is executed when we iterate over the object
+	
+#Eager Loading
+	-Load model class with other related model i.e both together called Eager Loading.
+	-Include is extension method define in different namespace.
+----------------------------------Building Form---------------------------------------------------
+#The Markup
+	-To render a form we use Html helper method like Html.BeginForm()
+	-BeginForm Method only render opening (begning) FORM tag.
+	-To render FORM close this method return disposable object and dispse method render FORM closing tag
+		For this you have to use BeginForm() in Using method;
+	-Form in HTML is container in which we can add various element in it.
+	-We have special markup that we need to follow to render mordern and responsive forms.
+	-This markup understandable by bootsstrap.
+
+#DropDown List
+	-IEnumerable vs List -> In the view we dont need any of the functionality provide by list like adding, deleting an object,Access object by index.(We only want to iterate)
+	-Using IEnumerable make code loosely coupled.	
+
+#Model Binding
+	-If your action modify data it should never be accessible via HttpGet.
+	-MVC Framwork will automatically map requested data to the parameter object this is called MODEL BINDING.
+	
+#Edit Form	
+	-To update data Microsoft provide TryUpdateModel() with this customer object will be update based on the key value pairs and request data.This will open some security hole.you can whitelist property as well by giving property in string array.Here magic string create problem.
+	-So what we can do is assign value manually to each property.
+	-You can also use automapper which is convention base mapping tool,so its take two object mapping object and sources object then map according to source object.
+	-For security reason you can create your own object which only contain property you want to update also called
+	DTO (Data Transfer Object)
+-----------------------------------------------------------------------------------------
+#Validation
+-Implement server side and client side validation
+-CSRF security attacks.
+
+#Adding Validation
+-Use model state property to get access to validation data
+-This object has property called IsValid use to change the application flow.
+-3Steps to follow
+	-1st : Add data annotation to your entities.
+	-2nd : Use ModelState to change the flow of the program (if not valid return the same view)
+	-3rd : Add the validtion msg (add placeholder in form for validation msg)
+	
+#Styling Validation Error
+-Add class in your css according to need.
+-byte only make entity implicitly required.
+-use byte? to make optional
+
+#Data Annotation
+-[Required]
+[StringLength(255)]
+-[Range(1,10)]
+-[Compare("OtherProperty")]
+-[Phone]
+-[Email]
+-[URL]
+-[RegularExpression(..)]
+Alll this data annotation have there own validation message, to overrid set the ErrorMessage property to "defdaultMsg"
+
+#Custom Validation
+#Refactoring Magic number
+#Validation Summary
+-MVC dont to how to convert empty value to byte so it implicitly required and generate Validation error
+#Client side validation
+-Benefits
+	-Immediate feedback
+	-No waste of server-side resources
+	-Good about data annotation is asp.net use it for both server as well as client-side validation
+	-Only works with standared data annotation in .Net.
+	
+#Anty-forgery tokens
+-We can view our POST request in our Network tab...
+-When user left an active session someone can request POST method to the server on her behalf.
+-Cross-site Request Forgery(CSRF)
+-To prevent 2 step needs to follow
+
+ ---------------------------------------------------------------------------------
+ #What is web API
+ -When there is any request on our application then MVC framework hands of that request to Action method in our controller.
+ -Action most of the time return view that parse by rasore view engine and eventually html markup will return to client.
+ -In this approach HTML generate on server and then return to client.
+ -The alternative is to create on client which return raw data.
+ -Benifit of generating markup on the client
+	-Less server resources (Improve scalability)
+	-Raw data often required less bandwidth (improve performance)
+	-Support for a broad range of clients(like tablet, mobiles ,Web) this client are our end point get the data and generate view locally.(We called this as Data Services or WEB API)
+-Framwork we use to build this data services is called ASP.NET web API
+
+#RESTFul Convention
+-API end point /api/customers	
+-Asp.Net API what we called Media formatter
+
+#Data Transfer Object
+#Auto Mapper
+-install-package automapper -version:4.1
+-Add new class under App_started called mapping profile.
+-This class inherited from Profile which is define in AutoMapper namespace
+
+#Using Camel Notation
+-How to configure web API to rerturn JSON object using camel notation.
+
+#IHttpActionResult
+-------------------------------------------------------------------------------------
+#Calling an Api using jquery
+-Jquery plugines BootBox and DataTable
+
+#BootBox plugines
+-install-package bootbox -version4.3.0
+
+#DataTables
+-install-package 	jquery.datatables -version:1.10.11
+-------------------------------------------------------------------------------------
+#Building a feature End-to-End systematically
+-Wants to return data go with MVC controller
+-API controller - when return data
+***************************Deployment***************************
+#Build Configuration
+#Application Setting
+-In most not all application we have one or more setting that can impact how the application operates.
+-Ex- Our application may use mail server to snd mail.So it needs to know the address of mail server, userid and pwd, so we stored this setting i our web.config and not in code.
+
+

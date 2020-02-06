@@ -1,0 +1,26 @@
+**************ReactJs Google Notes********************
+-JS library to buliding UI
+-Declarative 
+	-In react DOM is declarative (we never intract with DOM)
+-Component
+	-Building block of react app
+	-component are JS class or function optionally take input(properties i.e props) and return react
+		element	that describe how a section of the UI should appear.
+***************************Getting Started***************************
+#Introduction
+-Liberary for highly reactive and superfast javascript driven web application.
+-React is javascript library.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#What is REACT?
+-React is Javascript library for building User Interfaces.
+-It is about building javascript driven apps.
+-React app run in the browser not on server.Dont have to wait for server response.
+-React use Component to build UI.Component helps to keep our code manageable, maintainable and reusable piece of code.
+-You can split the UI in different react component and reuse them any where.(like Header component, sidebar component etc)
+-Ex- If you have a list item component and you want to output an list of list item you have to write code once and can 	easily reuse it.
+-React component can be thought of as custom HTML elements.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Real-world SPA's and React Web Apps
+-With component you build your own HTML elements.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Writing our First React code
