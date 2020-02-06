@@ -238,22 +238,45 @@ EmptyResult - when action dosent want to return any values (like void)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Changing the Model
 -Aim for small migration.
+-In EF every entity must have  key which will mapped to the primary key of the corresponding table in the database. By convention this property should be called either ID or the name of the type + Id.
+-Navigation Property - Property that allow us to navigate from one class to another.(Ex - Customer to its membership type)
+-This navigation property are useful when we want to load object and its related object together from a database.
+-Sometime for optimization no need to load entire membership object, we may only need the foreign key.
+-EF recognized this by convention and treated it as a foreign key.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Seeding the Database
+-While using code-first migration do not touch database and do all changes only with migration.
+-Use migration to populate fix table data (Ex- Membershiptype).
+-Use INSERT statement in Up method of MigrationName.cs file
+-With code-first workflow we have full versioning of our database in a consistent way across all environment.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Overriding Conventions
 	-There are few conventions built into EF which are used to determine the schema of the DB.
 		Ex- Customer Name is string which is of any length so DB equivalent to Nvarchar of MAX
+	-There is few convention built into an EF which are used to determine the schema of the database.
+	-Apply data annotation (which is defined in System.ComponentModel.DataAnnotations) to apply restriction on database.
+	-The approach of overriding default convention is called data annotation.
 	-Use data annotation or an attribute called required.
 	-Approach of overriding default conventions is called data annotations.
 	-Data annotation have some limitation so we have FLUENCE API
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Querying Objects
-	-deferred execution (EF not going to query the DB) 
-	-Query is executed when we iterate over the object
-	
+-To access database we need DBContext (ApplicationDbContext)
+-Remember to dispose the DbContext object.
+-There is an option for dependency framework injection.
+-DbContext object have Db set defined in DbContext.
+- When EF execute _context.Customer it will not going to query to database and this is called deferred execution.Query is executed when we iterate over this customers object.To query database in Action itself you need to add ToList or SingleOrDefault.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Eager Loading
+	-By default EF not load any related object.
+	-When we load Object with its related objects (i.e. Customer with Membershiptype), that is Eager Loading
 	-Load model class with other related model i.e both together called Eager Loading.
 	-Include is extension method define in different namespace.
-----------------------------------Building Form---------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Shortcut to Package manager console
+Tools -> options -> Environment(left hand frame) -> Keyboard -> search for Package manager console in main frame -> Add custome shortcut
+
+***************************Building Form***************************
 #The Markup
 	-To render a form we use Html helper method like Html.BeginForm()
 	-BeginForm Method only render opening (begning) FORM tag.
