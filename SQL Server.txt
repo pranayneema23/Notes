@@ -1,20 +1,65 @@
-Cluster vs Non-Cluster
+#Indexes
+-Key factor for a database
+-Without indexes the only option for a database would be to read all the data and discard what is not needed. Very inefficient.
+-Don't cache result else you end up with maintaining cache. Try improving performance using different indexes for tables.
+-Two principal type of index
+	-Clustered 
+	-Non-Cluster
+-Both indexes support 2 different storage models
+	-row-store
+	-column-store
+-Total 4 combination
+	-Clustered
+		-Clustered row-store
+		-Clustered column-store
+	-Non-Clustered
+		-Non-Clustered row-store
+		-Non-Clustered column-store
+		
 #Clustered
 -clustered works directly on table data, while the non-clustered works on a copy of such data.
--2 different storage models - row-storage and column-store.
--Total 4 combination
-	-Clustered Row-Store Index
-		-Create clustered index IXC on dbo.Users(Surname,Name)
-		-This will stored all other rows as well because clustered index works directly on table.
-		
-	-Non-Cluster Row-Store Index
-	-Cluster Column Store Index
 -There can be only one clustered index per table.
+-Clustered Row-Store Index
+	-Ex - Phone number directory
+	-Create clustered index "indexName" on dbo.Users(Surname,Name)
+	-Now rows will be stored ordered by Surname and then Name
+	-This will stored all other rows as well because clustered index works directly on table.
+	-there can be only one clustered index per table.
+	-it is perfect if:
+		-you are looking for zero, one or more rows in a table
+		-you are looking for a range of rows: from “A” to “B” for example.
+		-you need to have the rows returned in a specific order.
+	-If you need to order it in more than one way at the same time, you need to duplicate some or all data, and that’s why Non-Clustered Row-Store Indexes exists.
+-Cluster Column Store Index
+	-This index effectively turns SQL Server into a columnar database.
+	-create clustered columnstore index "indexname" on dbo.TrainingSessions
+	-perfect for analytical queries.
+	-All queries in which data needs to be grouped, optionally filtered and aggregated fall into this scope.
+	
+#Non-Cluster
+-works on a copy of such data.
+-Non-Cluster Row-Store Index
+	-It is like the index you can find at the beginning of a magazine, where the topics are listed along with a pointer to the page in which they can be found.
+	-create nonclustered index "indexname" on dbo.Users(PhoneNumber)
+	-The non-clustered index requires additional space to be stored, since it creates a copy of all the data in the columns you specified in the index definition, plus the space needed for the pointer.
+	-These is a lookup operation to get data data other then indexed.
+	-This index can be use when
+		-for zero or one row in a table
+		-for *very few* rows in a table (ie. only 1%)
+-Non-Clustered Column-Store Index
+	-create a colum-store index only on a subset of columns of your table.
+	-create nonclustered columnstore index "indexname" on dbo.Users(City, State, Country)
+	-This is helpful when you need to have your table both supporting a row-store index, that is quick for retrieving whole rows, but you also need to quickly aggregated on some columns of your data.
+	
+-Creating, altering or dropping and index may have huge impact on the server. The bigger the table the bigger the impact.
+
+#Caching
+-SQL Server has its own internal cache. Actually, it has several different caches. The most important is the buffer cache. Here is where data live. In an healthy situation 99% of your data comes from the cache. Yeah, right, 99%.
+
+#Row-Store Indexes
+Row-Store indexes are implemented a B+Trees. The technical difference between clustered and non-clustered is that for a clustered index in the leaf pages you have the actual data, while in the non-clustered you have data related only to the columns used or included in the index, and the pointer.
 
 -Covering Index - An index that contains all required information to resolve the query is known as a “Covering Index” – it completely covers the query.
 -To get statical Information
 SET STATISTICS IO ON
 SET STATISTICS TIME ON
-
--Syntax 
-	
