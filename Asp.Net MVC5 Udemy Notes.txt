@@ -278,29 +278,58 @@ Tools -> options -> Environment(left hand frame) -> Keyboard -> search for Packa
 
 ***************************Building Form***************************
 #The Markup
-	-To render a form we use Html helper method like Html.BeginForm()
+	-To render a form we use Html helper method like Html.BeginForm("actionName","controllerName")
 	-BeginForm Method only render opening (begning) FORM tag.
 	-To render FORM close this method return disposable object and dispse method render FORM closing tag
 		For this you have to use BeginForm() in Using method;
 	-Form in HTML is container in which we can add various element in it.
 	-We have special markup that we need to follow to render mordern and responsive forms.
 	-This markup understandable by bootsstrap.
-
+	-@Html.LabelFor() //Pass lambda expression that specifies the name of the target property in the model used in this form.
+	-To set model for view use @model directive.
+	-You can pass an anonymous	object to html helper method and any property we add to this object will be rendered as HTML attribute.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Form Labels
+-You can use data annotation [Display(Name = "DisplayName")] to display proper name on browser. OR
+-Use normal <label> and do other stuff manually.Like focus functionality etc....
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #DropDown List
-	-IEnumerable vs List -> In the view we dont need any of the functionality provide by list like adding, deleting an object,Access object by index.(We only want to iterate)
+	-Whene we want to pass 2 model(DbSet) to view use viewModel that encapsulates all the required data.
+	-IEnumerable vs List -> In the view we dont need any of the functionality provide by list like adding, deleting an object,Access object by index.(We only want to iterate which is provided by IEnumerable class)
 	-Using IEnumerable make code loosely coupled.	
-
+	-You can customised the viewmode based on the data needs to be displayed on view.
+	-Use html helper method @Html.LabelFor() pass second argument as a list of drop-down item.
+	-new SelectList() is one of the type in asp.net MVC that we use to initilized a dopdown list.First argument to its constructure of this class is list of items, 2nd argument is name of the property that holdes the value of the item and 3rd argument is property that hold the name of item, 4th argument is default selected value of dropdown.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Model Binding
+	-Add [HttpPost] attribute to the action to make sure it can only be called by httpPost and not by httpGet.
 	-If your action modify data it should never be accessible via HttpGet.
-	-MVC Framwork will automatically map requested data to the parameter object this is called MODEL BINDING.
-	
+	-MVC Framwork will automatically map requested data to the parameter object(define as method parameter) this is called MODEL BINDING.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Saving data
+-To update data in database, first we need to add the data into dbcontext, now its just in memory not in DB yet.
+-DBContext has a change tracking mechanism so that any time you add,modify or remove object it will mark as Added, modified or deleted.
+-To persist dbcontext changes call dbcontext.SaveChanges() and it will generate sql statement at runtime and it will rune them in database.
+-This changes will wrapped in transation(i.e. all changes get persist or nothing)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Edit Form	
-	-To update data Microsoft provide TryUpdateModel() with this customer object will be update based on the key value pairs and request data.This will open some security hole.you can whitelist property as well by giving property in string array.Here magic string create problem.
+	-Change default View by passing viewName String as 1st argument to View method.
+	-@Html.TextBoxFor() have some overloads so we can pass formate string as 2nd argument.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Updating Data
+	-Post form data to action and then in action get data from db by dbcontext based on id.
+	-Now to udpate data we have 2 ways.
+		-Controller have method name TryUpdateModel()
+		-To update data Microsoft provide TryUpdateModel() with this customer object will be update based on the key value pairs and request data.This will open some security hole.This will update all the property of given object.What if we don't want this should happen.Microsoft says you can whitelist property as well by giving property in string array.Here magic string create problem.
 	-So what we can do is assign value manually to each property.
 	-You can also use automapper which is convention base mapping tool,so its take two object mapping object and sources object then map according to source object.
 	-For security reason you can create your own object which only contain property you want to update also called
-	DTO (Data Transfer Object)
------------------------------------------------------------------------------------------
+	DTO (Data Transfer Object) like UpdateCustomerDto
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Troublshooting Entity Validation Error
+-To figure out error you need to manually add try catch block to the code and change excption to DbValidationException.
+
+***************************Implementing Validation***************************
 #Validation
 -Implement server side and client side validation
 -CSRF security attacks.
