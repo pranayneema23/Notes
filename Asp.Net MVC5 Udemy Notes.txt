@@ -330,23 +330,28 @@ Tools -> options -> Environment(left hand frame) -> Keyboard -> search for Packa
 -To figure out error you need to manually add try catch block to the code and change excption to DbValidationException.
 
 ***************************Implementing Validation***************************
-#Validation
--Implement server side and client side validation
--CSRF security attacks.
-
+#Introduction
+-Implement server side and client side validation in our form.
+-CSRF(Cross site requests forgery) security attacks.	
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Adding Validation
--Use model state property to get access to validation data
+-Previously we use data annotation to overridEF conventions.
+-Asp.Net MVC also use data annotations to validate action parameters.
+-In controller we can use ModelState property to get access to validation data
 -This object has property called IsValid use to change the application flow.
--3Steps to follow
+-If ModelState is not valid then we reload the form with same data.
+-To add validation, 3 Steps to follow
 	-1st : Add data annotation to your entities.
-	-2nd : Use ModelState to change the flow of the program (if not valid return the same view)
-	-3rd : Add the validtion msg (add placeholder in form for validation msg)
-	
+	-2nd : Use ModelState.IsValid to change the flow of the program (if not valid return the same view)
+	-3rd : Add the validtion msg (add placeholder for validation message next to each field in form)
+		-@Html.ValidationMessageFor()
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Styling Validation Error
+-Check the applyed class using inspect element feature.
 -Add class in your css according to need.
 -byte only make entity implicitly required.
--use byte? to make optional
-
+-use byte? (i.e. nullable byte)to make optional
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Data Annotation
 -[Required]
 [StringLength(255)]
@@ -356,26 +361,63 @@ Tools -> options -> Environment(left hand frame) -> Keyboard -> search for Packa
 -[Email]
 -[URL]
 -[RegularExpression(..)]
-Alll this data annotation have there own validation message, to overrid set the ErrorMessage property to "defdaultMsg"
-
+-All this data annotation have there own validation message, to overrid set the ErrorMessage property to "defdaultMsg"
+-To override set ErrorMessage Property to custom message.[Required(ErrorMessage = "Custome error message" )]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Custom Validation
-#Refactoring Magic number
+-Validation while some business rule failed.
+-Add Class contain business rule(Validation attribute related rules) in MODELS and derived the class from ValidationAttribute from System.ComponentModel.DataAnnotations;
+-Override IsValid Method in newly added class
+-Apply the attribute on your model(i.e. the class you have created) 
+-Return the suitable validation result form attributr class.
+-If everything is good return ValidationResult.Success else return ValidationResult("Error Message")
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Refactoring Magic Number
+-Helps in maintainability of application
+-MembershipType is refrence data 
+-When you use any of the refrence data in your code you have to expectily define these data in your domain model class of your application.
+-Define static readonly fields in your code
+-You can also use ENUM to overcome Magic number.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Validation Summary
--MVC dont to how to convert empty value to byte so it implicitly required and generate Validation error
+-Show validation error message on the top of the form as well.
+-Use @Html.ValidationSummary on the top of your form.
+-1st parameter to ValidationSummary is boolean to exclude property error and pass your custom message as 2nd parameter.
+-MVC dont know how to convert empty value to byte so it implicitly required and generate Validation error
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Client side validation
 -Benefits
-	-Immediate feedback
-	-No waste of server-side resources
+	-Immediate feedback -dont wait for round trip to the server.
+	-No waste of server-side resources.
 	-Good about data annotation is asp.net use it for both server as well as client-side validation
 	-Only works with standared data annotation in .Net.
-	
+-By default client-side validation not enable in asp.net mvc application.
+-We have jqueryval but not refrenced anywhere in your code.
+-Go to shared -> layout .The RenderSection("scripts",required:false) allows us to add script section in our view and what we put there will render here in layout page.
+-Now refrence your jqueryval from page where we need client-side validation
+-You  can check form Network tab of Chrome development menu.
+-The good thing about data annotation is Asp.Net MVC use them for both server-side and client-side validation.
+-In controller when we get an parameter in action MVC framework  validate that object using data annotation applied on the properties.
+-Also in razor view when we render input fields using HTML helper method, razor view engine looks at data annotation applied on the refrence property and add additional attributes to the HTML markup.
+-Client-side validation only works with standared data annotation in .net.
+-If you want to apply client-side validation for custom attribute you need to write some jquery code.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Anty-forgery tokens
 -We can view our POST request in our Network tab...
+-you can see form-data in body of request	
 -When user left an active session someone can request POST method to the server on her behalf.
 -Cross-site Request Forgery(CSRF)
--To prevent 2 step needs to follow
+-We need to make sure that request should come from our customer form not from different websites.
+-To prevent CSRF, 2 step needs to follow
+	-In customer form use helper method @Html.AntiForgeryToken() this will create a token which act like a secrete code put it in a hidden field (_RequestVerificationToken) and also in cookies of user compueter.
+	-Perform validation on server side by decorate save action using [ValidateAntiForgeryToken]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Code Review
+-Some time we have initial value in our form because of initilisation of object in controller.
+-One way to do is remove initilisation of object from controller and done in view using @Html.Hidden insted of @HtmlHiddenFor() but the problem is magic string.
+-Better approach is dedicate pure view model to the form and individualy define and initilise each property.
 
- ---------------------------------------------------------------------------------
+ ***************************Building RESTful Services With ASP.Net Web API***************************
  #What is web API
  -When there is any request on our application then MVC framework hands of that request to Action method in our controller.
  -Action most of the time return view that parse by rasore view engine and eventually html markup will return to client.
