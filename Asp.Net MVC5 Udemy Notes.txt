@@ -417,8 +417,13 @@ Tools -> options -> Environment(left hand frame) -> Keyboard -> search for Packa
 -One way to do is remove initilisation of object from controller and done in view using @Html.Hidden insted of @HtmlHiddenFor() but the problem is magic string.
 -Better approach is dedicate pure view model to the form and individualy define and initilise each property.
 
- ***************************Building RESTful Services With ASP.Net Web API***************************
+******************************Building RESTful Services With ASP.Net Web API*********************************************************
+ #Intoduction 
+ -Build RESTful services using ASP.Net web API and DTO(Data transfer object)
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  #What is web API
+ -In normal scenario HTML markup will generate on server and then return to client.
+ -There is an alternative way to generate HTML markup.We can generated on a client.Insted of our action returning markup it can return raw data.
  -When there is any request on our application then MVC framework hands of that request to Action method in our controller.
  -Action most of the time return view that parse by rasore view engine and eventually html markup will return to client.
  -In this approach HTML generate on server and then return to client.
@@ -427,23 +432,75 @@ Tools -> options -> Environment(left hand frame) -> Keyboard -> search for Packa
 	-Less server resources (Improve scalability)
 	-Raw data often required less bandwidth (improve performance)
 	-Support for a broad range of clients(like tablet, mobiles ,Web) this client are our end point get the data and generate view locally.(We called this as Data Services or WEB API)
--Framwork we use to build this data services is called ASP.NET web API
-
+-Framwork we use to build this data services is called ASP.NET web API.
+-Asp.net Web API framework create after Asp.net MVC5 but follows same architecture.
+-We use the API to get our data and then use JQuery plugines DataTable to display data on client browser.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #RESTFul Convention
--API end point /api/customers	
+-API end point is /api/customers where we are going to support few different kind of supports.
+GET /api/customers - Get multiple data
+GET /api/customers/1 - Get single data
+POST /api/customers - To add data (data will be sent in request body)
+PUT /api/customers/1 - To update data
+DELETE /api/customer/1 - To delete data
+-So this request type and endpoint is convention for RESTful(REpresentational State Transfer) API.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Building an API
+-Add API folder in Controller's folder.
+-Now add Web API 2 controlles to API folder.
+-Web api 2 need some changes in Global.ascx file, add webconfig.register in Application_Start()
 -Asp.Net API what we called Media formatter
-
-#Data Transfer Object
+-Use HttpResponseException to throw standared http errors.
+-Whenever creating new resource return that newly created resource because it MAY have server generated ID.
+-Remember to apply [HttpPost] attribute to action use to only response for post method(i.e. creating new resource)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Testing an API
+-The Asp.net behave like a media formatter.
+-Object -> Media Formatter ---serialize--> output(xml/json)
+-Use postman REST client to test your API.
+-Enter your url need to be tested.
+-pass key-value pair in header if needed.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Data Transfer Objectretunr 
+-There is some issue with this design, our API receive and return customer objects.This customer object is part of domain model of our application.
+-It contains implementation details which can change frequently as we implement new feature in our application.And this will break existing client working on previous model.Ex- adding/remove property may break existing client.
+-Our API should be STABLE as possible.
+-To do this we need a different model called DTO(Data Transfer Object)
+-This DTO is plain datastructure and is used to transfer data from the client to the server or vice-versa.
+-By creating DTO we reduce the chances of breaking our API as we refactor our domain model.
+-API should never received or return domain objects.
+-Also using domin object in API open a security hole in our application.User may send bad data in JSON.
+-Now Add new folder called DTO
+	-create class called CustomerDTO in DTO folder.
+	-Should not include properties which is of type domina model,because this will create dependency in our DTO to domian model.You should use premitive type like string,int or byte or custom DTO.
+	-Whenever you want to return hierarchical data structure you should return custom DTO.
+	-Now we need to map our customer domina model to our DTO customer object.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Auto Mapper
 -install-package automapper -version:4.1
--Add new class under App_started called mapping profile.
--This class inherited from Profile which is define in AutoMapper namespace
-
+-Now create mapping profile which determines how objects of different types can be mapped to each other.
+-Add new class under App_started called MappingProfile.
+-This class inherited from Profile which is define in AutoMapper namespace.
+-Now in constructor use Mapper.CreateMap<Customer,CustomerDTO> (Generic method take 2 parameter source and target)to create mapping configuration between 2 types.
+-When we called this methos automapper use the reflection to scan this types it find there properties and mapes them based on there name and this is we called automapper as CONVENTION BASED MAPPING TOOL.(because it use property name as the convention to map object.)
+-Now we need to load this when our application started.
+-Open global.ascx and add Mapper.Initialize(); (Pass an action as lambda expression)
+-Change all the return type and parameter from domain model class to DTO class.
+-In automapper you can override the default convention, exclude the properties form mapping add new properties in mapper.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Using Camel Notation
+-Default the properties of our JSON object are named using Pascal notation.But in JS we use camel notation.
+-When we consume object with pascal notation our code looks little bit ugly.
+-You can configure We api to return JSON object with camle notation.Use WebApiconfig.cs
 -How to configure web API to rerturn JSON object using camel notation.
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #IHttpActionResult
--------------------------------------------------------------------------------------
+-When we use RESTful the response of Create method should be created or 201 not 200 which is OK.So we should return IHttpActionResult.
+-If resource not found return BAdRequest() or NotFound();
+-In create resource method, as a RESTful convention we wil return URI of newly created resource to the client.We use Created(new Uri(Request.RequestUri + "/" + 	customer.Id),customerDto)
+-IN API it is prefered to use IHttpActionResult as a return type.
+
+************************************Client-side Development********************************
 #Calling an Api using jquery
 -Jquery plugines BootBox and DataTable
 
