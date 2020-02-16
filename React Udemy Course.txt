@@ -24,3 +24,53 @@
 -With component you build your own HTML elements.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #Writing our First React code
+-Use codepen.io as a web editor.
+-Now the repeated div can be consider as a component.(Ex- person div).So we use REACT for reusable component here.
+-To use react we need to first Import some external javascript libraries.
+-We also need to import library for REACT DOM.
+-React itself kind of is the logic we need for creating these React components(React is all about component),DOM is then about rendering these component to the real DOM.
+-React also uses a special JAVASCRIPT syntax and a lot of next generation javascript features.
+-To unlock the usage of these features and special syntax we have to use Babel.
+-Babel is a tool which compiles the next generation Javascript code you are writing here to code thats run fine in the browser
+-Create React component so that we have reusable custom HTML element we can reuse insted of repeating html div multiple time.
+-React component is just a function and may be named as custom HTML element.
+	-Component should return the code that you actually want to render to the DOM.For that react uses a special syntax which is called JSX.Use parentheses to return multiline code.
+	-Babel allowed us to mix the javascript and HTML element(which is looks like html but which isn,t it's all about JSX this get compiles to normal JS code)
+	-To turn this function into react component, we actually have to use react to render it to the screen.
+	-React package responsible for correctly parse the JSX code.
+-ReactDOM. 	
+	-This actually exposes an object.
+	-ReactDOM.react() allowed us to render a javascript function as a component to the real DOM.
+	-We render the function not by referencing it but by turning it into a HTML element, behind the scenes using the JSX syntex.
+-Component in react can configured dynamically as we need them.
+-The concept of passing argumrnt in React function is called props.prop contain all the attributes I add to my own component.
+-JSX has the requirement of the only having one root element.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Why Should we Choose React?
+-UI state becomes difficult to handle with Vanilla JavaScript.
+-Focus on business logic not on preventing your App form exploding.
+-Huge ecosystem, Active community, High performance.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#React Alternatives
+-Angular
+-Vue
+-Backbone
+-Ember
+-Jquery - It is only about traversing the DOM and targeting elements in the DOM.
+-React is about just declaring what you see and focusing on the logic instead of focusing on the how.
+-This framework allows us to focus on the logic and your business model and not so much on the technical side of the DOM element you want to reaching to change.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Understanding Single page applications and multi page application
+-With React,Angular or Vue we can create 2 kind of application SPA or MPA.
+-SPA
+	-We only get back only one single HTML file from the server when user visit the www.example.com there after everything is managed with JS or Js framework.The entire page consist of component which are rendered and handled by JS.
+	-If we manage entire page by JS we never have to go back to the server and reload the page.This will improve user experience.Everything happen instently.
+	-IN SPA page built up with component and every component is a react component, and entire page also managed by root react component.
+	-Here generally we only have only one ReactDOM.render() call.
+	-We only have one root app component which is mounted on the DOM which host all other react component.
+-MPA
+	-Here we get multiple HTML pages, where each page has the content for a given route. Ex- www.example.com/user
+	-Here we also use react but only to create little widgets.We only dump individual content component but not the entire page is managed by react.
+	-Here we split up our app into theoretical components,but actually a lot of page is just going to be a normal HTML and CSS code and some widget we dump in like image gallary that is managed by react.
+	-The entire page is not under react control.The individual widget dont know of each other existance.
+	-Here we called ReactDOM.render() more often to render our different widget.
