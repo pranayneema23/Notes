@@ -74,3 +74,211 @@
 	-Here we split up our app into theoretical components,but actually a lot of page is just going to be a normal HTML and CSS code and some widget we dump in like image gallary that is managed by react.
 	-The entire page is not under react control.The individual widget dont know of each other existance.
 	-Here we called ReactDOM.render() more often to render our different widget.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+***************************Refreshing next generation JAVASCRIPT***************************
+#Module Introduction(Next-Gen Javascript)
+-This is all about ES6 and next generation syntex.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Understanding "let" and "const" and "var"
+-"let" and "const" are different ways of creating variables.
+-"var" is used to create variable in JavaScript.
+-In ES6 two different keyword were introduce let and const.
+-A "let" is like new "var" but they are different in SCOPE.
+-Use const if you plan on creating a constant value.
+-If you try to change const variable you will get an error.
+-var and let are both used for variable declaration in javascript but the difference between them is that var is function scoped and let is block scoped.
+-It can be said that a variable declared with var is defined throughout the program as compared to let.
+-calling var before definition will return undefined.
+-calling let a before definition will give Refrencerror.
+-At the top level, let, unlike var, does not create a property on the global object.
+-In strict mode, var will let you re-declare the same variable in the same scope while let raises a SyntaxError.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Arrow Functions
+-It's a different syntex for creating JavaScript functions.
+-const myFunc = (list of arguments) => { fxn body}.
+-Its bit shorter then noral function syntex.
+-It also solves issue with "this" keyword.
+-Examples
+//Normal function
+function printMyName(name)
+{
+  console.log(name);
+}
+
+//Arrow function
+const printMyName = (name) =>
+{
+  console.log(name);
+}
+
+//If you only have ONE argument then
+const printMyName = name =>
+{
+  console.log(name);
+}
+
+//if function return something
+const multiply = (number) => {
+return number*2;
+}
+
+//Shortern syntax
+const multiply = number => number * 2;
+
+printMyName('Pranay');
+console.log(multiply(2)); //4
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Exports and Imports
+-Helps in writing Modular code.(JS code you split up over multiple file.)
+-Two types of imports default and named.
+-In default import even if you not specify the name of function you want to import it automatically import default function.
+-In named function you have to explicitly import the function using {}. (we export the function by Name thats why named export.)
+-Example :
+	-person.js 
+		-export default person
+	-utility.js
+		-export const clean
+		-export const baseData
+		
+	-app.js
+		-import per from './person.js' //Default import
+		-import {clean} from './utility.js' //named import
+		-import {baseData} from './utility.js'  //named import
+		-import {clean as Clean,baseData} form 'utility.js' //named import
+		-import * as bundled from 'utility.js'
+		
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Understanding Classes
+-Another core feature of next generation JS is classes.
+-Classes are essentially blueprint of objects.
+-Class can have both properties and methods.
+-Methods - function attached to class.
+-Properties - variable attached to class.
+-Class is instantiated with "new" keyword.
+-Class also support inheritance.(If you define constructor then remember to call super constructor in derived class using Super() method)
+-Classes is used by React to create its components.
+-Example
+//Class Human
+class Human {
+  constructor(){
+    this.gender = 'male';
+  }
+  
+  printGender(){
+    console.log(this.gender);
+  }
+}
+
+//Class extends Human
+class Person extends Human {
+  constructor() {
+    super();//calling base class constructor.
+      this.name = 'Max';
+  }
+  
+  printMyName(){
+    console.log(this.name);
+  } 
+}
+
+//instantiate class
+const person = new Person();
+person.printMyName();
+person.printGender();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Classes, properties and Methods
+-Next generation JS also offers a different syntex of initilizing properties and methods.
+-In ES7 you can assign a property directly 	inside your class with myProperty equals value.(i.e. you can skip the constructor function call.But behind the scene it will call constructor)
+-Simillarly for methods we can use arrow function which helps to reduce complexity of this keyword.
+-Example
+class Human {
+  gender = 'male';
+  
+  printGender = () => {
+    console.log(this.gender);
+  }
+}
+
+class Person extends Human {
+  name = 'Max';
+  gender = 'female';
+  
+  printMyName = () => {
+    console.log(this.name);
+  } 
+}
+
+const person = new Person();
+ person.printMyName();
+person.printGender();
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Spread & Rest Operators
+-Its only one operator i.e. ...(3 dots)
+-Spread = useed to split up array element OR object properties.
+-Rest = Used to merge a list of function arguments into an array.(We used in function argument list, it merge argument into an array)
+-Example 
+//Array
+const numbers = [1, 2, 3];
+const newNumbers = [...numbers, 4, 5];
+console.log(newNumbers);
+
+//Object
+const person = {
+  name : 'Pranay'
+};
+const newPerson = {
+  ...person,
+  age : 28
+};
+console.log(newPerson);
+
+//Restconst filter = (...args) => {
+  return args.filter(el => el === 1);
+} 
+
+console.log(filter(1, 2, 3));
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Destructuring
+-It allows you to easily extract array element or object properties and stored them in variables.
+-Spread takes out all element or all properties and distributes them in a new array or object or whatever you are using it.
+-Destructuring allows us to  pull out single elements or properties and stored them in variables for arrays and for objects.
+-Example
+//Array Destructuring
+const numbers = [1, 2, 3];
+[num1, , num3] = numbers;
+console.log(num1,num3)
+
+//object destructuring
+{name} = {name : 'Pranay',age : 24};
+console.log(name);//Pranay
+console.log(age);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Reference and Primitive Type Refresher
+-We have refrence and primitive type in javascript.
+-Primitive types
+	const number = 2;
+	const num2 = number;//Actual copy of number
+	-number, string, boolean this are primitive type.
+-Refrence type
+	-object and arrays are refrence types.
+	-Changes in original object also reflect in refrence object.Sometime this leads to an unexpected behaviour.
+	const person = {
+	  name : 'Pranay'
+	};
+
+	const secondPerson = person;
+	person.name = 'Ritika';
+	console.log(secondPerson);//Ritika
+	-To actually copy the object or array we use ... operator.
+	const secondPerson = {
+		...person
+	}
+	-The spread operator pull out the properties from person object and assigned it to secondPerson.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Refreshing Array Functions
+-map() takes function as parameter and then execute them on each element of an array.
+const number = [1, 2, 3];
+const doubleNumArray = number.map((num) => num * 2);
+console.log(number);
+console.log(doubleNumArray);
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
