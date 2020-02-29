@@ -282,3 +282,159 @@ const doubleNumArray = number.map((num) => num * 2);
 console.log(number);
 console.log(doubleNumArray);
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+***************************Understanding the base features & Syntax***************************
+#The Basic
+-All core react concepts
+-Discuss what all its take to build reactapp on local machine.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#The Building Workflow
+-Why we need complex workflow while working locally.
+	-To optimize code - Code should be as small as possible and optimized as possible.
+	-To use next-generation JS features.(ES6 vs ES5)
+	-We want to be able to write ES6 or above code and still ship code in the end that runs on as many browser as possible.
+	-More productive - This incude next-generation JS feature that allowes us to write more condensed code, but it also include things like CSS auto-prefixing.
+	-CSS prefixing are thing to achieve broadest possible browser support for CSS feature.
+	-Linting - Tool that actually warns you if you are writing sub-optimal code.
+-How do we achieve such a workflow?
+	-Use Dependency management tool(3rd party library JS package) like npm or yarn.
+		-React, ReactDOM, compiler for next-generation JS to current gen JS is also dependency.
+	-We need Bundler(recommended WebPack ) because we want to write moduler code and split it up over multiple file so the each file has a clear task, a clear focus and easy for us to manage.
+		-We want to make sure that all this code get bundeled into a couple of file in the end when we ship it.
+	-Use babel + preset 
+	-Need development server to test our app.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Using Create React App
+-At root level we have couple of configuration file.
+-package-lock.json - They are just locking in the version of dependency we are using.
+-package.json - The general dependency our package has are defined in the package.json files.
+	-react-script : It is a package offering all this build workflow,this development server, the next-generation JS features support.
+	-Also there is some script define.You can run this script by npm run and then the script name. 
+-node_module : holds all the dependencies and sub-dependencies of our project.(react-script has lots of other depenedency then react and reactDOM)
+-public : The root folder which gets served by the web server in the end, though here it only hold the file we can edit.
+	-index.html - We will use this page only to create SPA.
+	-We mount our react application in div with id = "root"
+	-manifest.json - Define meta-data about our application.
+-scr : Script file were added here.This are actually a file where we are working, actually  our react application.
+	-index.js - get access to this root element in our DOM, in our HTML file.It render our react application with the render method.Here we refrence some "App" object or element which we import from an app file.
+	-App.js - Define App component, the first component our application have right now.
+	-App.css - some styling that we use in a App.js file.
+	-Index.css - Apply style globally.Define some general style for body of our application.
+	-registerServiceWorker.js - Importent for registering service worker which is generated automatically thats related to progeressive web app we get out of the box.It will basically pre-cache our script file.
+	-App.test.js - Allow us to create unit tests for the different units. 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Understanding Component Basics
+-Component create basic custom HTML element sometime.
+-Typically we render one root component,generally named App component but you can rename whatever.
+-In App we can nest all other components.
+-In App.js 
+	-We import react and component form react.
+		-react : responsible for rendering anything to dom.
+		-Component class : to inherit by Our Class to become a component.
+-Our component should return html or should render something HTML.
+-You also might see react component with .jsx as a file extension insted of js.The reason for this is the code we have written in JSX code in render function or in component body.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Understanding JSX
+-The JSX syntex written as 
+return (
+      <div className="App">
+        <h1>Hi, I'm a React App</h1>
+      </div>
+    );
+-Equivalent to or (Compiles to )return React.createElement('div',{className:'App' },React.createElement('h1',null,'I\'m a React App'));
+-This is one of the reason that we import React from 'react'.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#JSX Restrictions
+-You cannot use "class" keyword in JSX bcoz it is reserved keyword in javascript.
+-The value we pass in 1st argument is actually provide or managed by react library.(We are not using real HTML tag)
+-JSX expression must have one root element only.But in react 16 this is kind of loosened.But best practice is wrap everything in one root element.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Creating a Functional Component
+-As a convention you should give you Folder and file name a capital start.
+-We have 2 ways to create component.
+	-extend component class. Usefull when we use stats in component(Class based components)
+	-Define normal JS class and return JSX. Dont forget to import react and export function to default.(functional component)
+-Import should have Upper case as all lower case is generally used by html tag in JSX.
+-If we dont have anything to nested we can only use self closing tag only for custom tag.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Working with components and Re-Using Them
+-Component are awesome because we can focus our code in each file and hence make it much more maintainable.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Outputting Dynamic Content
+-If you have any dynamic content with your JSX and you want to execute as javascript code, you have to wrap code in single curly braces.<p>I'm person and I'm {Math.floor(Math.random() * 30)} years old!!</p>
+-You can execute any one line expression in this curly braces.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Working with Props
+-Make your component configurable,flexible and dynamic use object name "props".
+-React by default an argument by default (generally called props but you can name other) with all the properties of this component.(Properties is attribute you add in your component when you calling component)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Understanding the "children" Properties
+-React gives us a special props called props.children.
+-children include any plain text that we include in between start and closing tag of component.
+-You can also include HTML as well.Also it can be other react component or anything.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Understanding and Using State
+-Props is simply an object give us access to all the attribute we pass to our own components.
+-There is a special property you can define in any component which extends component called STATE.
+-You cant define property in any normal function, in function you can only use some const or var.
+-As props are set and passed from outside, state is managed from inside a component.
+-State only available in class based React Component.
+-In React 16.8 the react hook provide new way so now we can use state in functional component as well.
+-State should used with care because it makes your application unpredictable and unmanagable.
+-State is used if we want to managed some component internal data.
+-We assign some value to state, here we assign javascript object to state.
+-this refer to the class as we are using ES6 syntax.
+-state can be changed, and when its changes, it will lead REact to re-render our DOM or to update the DOM.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Handling Events and Methods
+-In html button click event named as onclick but in JSX it is onClick.
+-As a good paractice use methodNameHandler as method name for onClick event.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Manipulating the State
+-By extending the component we get special state property called setState property, this properties allowed us to update this special state property here and it will then ensure that the react get to know about this update and update the DOM.
+-Set state takes an object as an argument and it will merge whatever we define here with our existing state.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Using the useState() Hook for State Manipulation
+-Prior to REACT Version 16.8 "setState" was the only way of managing states in React Applications.
+-Since React 16.8, there is a way to manage state in functional components with a feature called React Hooks.
+-React Hook is basically a function exposed to you by react which you can use in functional components.
+-useState return an array with exactely two elements and always two elements.
+	-firstElement = Always be our current state(Object we passed in useState).
+	-secondElement = function that allows us to update the state(mention in useState method or value of firstElement)
+-We use array destructuring feature to get back value from useState().
+-The importatnt difference between React Hook and class based setState is that the useState's  secondElement dosent merge whatever you pass to it with the old state, insted it replace old state with it.You have to manually all other state properties.
+-But insted of add manually in react hook you can use useState() multiple time.So add one more useState() for other object as well.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Stateless vs Stateful Components
+-Stateful component that manages state(also called smart component or container component bcoz contain state of your component)
+-Stateless components dosent have any internal state management.(also called dumb or presentational component)
+-Try to implement as much as stateless component then stateful component. It will make your app easy maintainable.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Passing Method Reference Between Component 
+-We can pass a refrence to the handler as a property to our component.
+-You can pass method as a props, so that you can call a method whic might change the state in another component which shouldn't have the direct access to the state.
+-You can pass down click handlers which allows you to change data in hr parents component(in the app component in our case for person component)
+-You can pass value to our function or handler.Now to pass data to function or handler we have 2 ways.
+	- called bind() with 2 argument.(Recommended)
+	- Execute an arrow function on "onClick" method.(Not recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Adding two way binding
+-By two way binding you can update content dynamically.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Adding Styling With Stylesheet
+-Two ways of implement styling.
+-Web pack which is build tool which is end used by this react script package we're using implicetly.
+-Wepack enable us to import css into javascript.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Working with Inline Style
+- JSX provide style attribute.
+-Use Inline styling whenever you want to scope to style and make sure it only applies to this single element 
+and no other element in your app or even in the same component.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#Note from assignments
+-There is two ways to define methods. One is using const and arrow function.
+	-Use this when we are plan to use this keyword inside the method with encapsulate the this keyword refrence to the class variable.
+-Another is simple render(){};
+	-Here this refer to class.But if you want to use it as a handler at that time it will no longer refer to class variable
+	due to way how JS works when execute code at runtime.
+-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
